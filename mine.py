@@ -1,5 +1,6 @@
 import minerl
 import gym
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     env = gym.make("MineRLNavigateDense-v0")
@@ -8,6 +9,7 @@ if __name__ == "__main__":
     done = False
     net_reward = 0
 
+    rewards =[]
     while not done:
         action = env.action_space.noop()
 
@@ -20,4 +22,10 @@ if __name__ == "__main__":
         obs, reward, done, info = env.step(action)
 
         net_reward += reward
+        rewards.append(net_reward)
+
         print("Total reward: ", net_reward)
+    print('plotting')
+    plt.plot(rewards)
+    plt.title('Cumulative Reward')
+    plt.show()
