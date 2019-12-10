@@ -27,7 +27,7 @@ class ReinforceWithBaseline(tf.keras.Model):
         self.num_actions = num_actions
 
         # TODO: Define actor network parameters, critic network parameters, and optimizer
-        self.state_size = state_size
+        self.state_size = 512
         self.hidden_size = 512
         self.dense1 = tf.keras.layers.Dense(
             self.hidden_size, input_shape=[-1, self.state_size], activation="relu"

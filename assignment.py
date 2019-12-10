@@ -7,6 +7,8 @@ import numpy as np
 import tensorflow as tf
 from reinforce import Reinforce
 from reinforce_with_baseline import ReinforceWithBaseline
+from state_space import new_treechop_state
+from action_space import new_action_treechop
 
 
 def visualize_data(total_rewards):
@@ -63,14 +65,17 @@ def generate_trajectory(env, model):
     while not done:
         # TODO:
         # 1) use model to generate probability distribution over next actions
+        state = new_treechop_state(state)
         states.append(state)
-        prbs = model(np.array([state]))
-        prbs = tf.reshape(prbs, [prbs.shape[1]])
-        prbs = np.array(prbs)
+        model_input = np.array([state])
+        prbs = model(model_input)
         # 2) sample from this distribution to pick the next action
-        action = np.random.choice(range(len(prbs)), p=prbs)
+        distribution = prbs[0].numpy()
+        action = np.random.choice(range(len(distribution)), p=distribution)
+        print("chose", action, "in distribution", distribution)
         actions.append(action)
-        state, rwd, done, _ = env.step(action)
+        action_step = new_action_treechop(env.action_space.noop(), action)
+        state, rwd, done, _ = env.step(action_step)
         rewards.append(rwd)
     return states, actions, rewards
 
@@ -107,15 +112,19 @@ def main():
         print("<Model Type>: [REINFORCE/REINFORCE_BASELINE]")
         exit()
 
-    env = gym.make("MineRLNavigateDense-v0")  # environment
-    state_size = env.observation_space.shape[0]
-    num_actions = env.action_space.n
+    env = gym.make("MineRLTreechop-v0")  # environment
+    print("env", env)
+    print("env.observation_space", env.observation_space)
+    print("env.action_space", env.action_space)
+    print("env.action_space.spaces", env.action_space.spaces)
+    # state_size = env.observation_space.shape[0]
+    num_actions = len(env.action_space.spaces) - 1
 
     # Initialize model
     if sys.argv[1] == "REINFORCE":
-        model = Reinforce(state_size, num_actions)
+        model = Reinforce(state_size=None, num_actions=num_actions)
     elif sys.argv[1] == "REINFORCE_BASELINE":
-        model = ReinforceWithBaseline(state_size, num_actions)
+        model = ReinforceWithBaseline(state_size=None, num_actions=num_actions)
 
     # TODO:
     # 1) Train your model for 650 episodes, passing in the environment and the agent.
