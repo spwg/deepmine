@@ -9,7 +9,7 @@ if __name__ == "__main__":
     done = False
     net_reward = 0
 
-    rewards =[]
+    rewards = []
     while not done:
         action = env.action_space.noop()
 
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         rewards.append(net_reward)
 
         print("Total reward: ", net_reward)
-    print('plotting')
+    print("plotting")
     plt.plot(rewards)
-    plt.title('Cumulative Reward')
+    plt.title("Cumulative Reward")
     plt.show()
