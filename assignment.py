@@ -44,7 +44,6 @@ def discount(rewards, discount_factor=.99):
     discounted_rewards[-1] = rewards[-1]
     for i in reversed(range(len(rewards) - 1)):
         discounted_rewards[i] = discounted_rewards[i + 1] * discount_factor + rewards[i]
-    # print(f"discount(): discounted_rewards = {discounted_rewards}")
     return discounted_rewards
 
 
@@ -132,11 +131,11 @@ def main():
     rewards = []
     for ep in range(episodes):
         rwd = train(env, model)
-        print(f"[+] Episode {ep} reward = {rwd}.")
+        print("[+] Episode", ep, "reward = ", rwd, ".")
         # 2) Append the total reward of the episode into a list keeping track of all of the rewards.
         rewards.append(rwd)
     # 3) After training, print the average of the last 50 rewards you've collected.
-    print(f"[+] Avg of last 50 rewards = {np.mean(rewards[len(rewards)-50:])}.")
+    print("[+] Avg of last 50 rewards = ", np.mean(rewards[len(rewards)-50:]), ".")
     # TODO: Visualize your rewards.
     visualize_data(rewards)
 
