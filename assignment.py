@@ -141,6 +141,7 @@ def main():
             episodes = 650
             rewards = []
             for ep in range(episodes):
+                print(ep, "/", episodes)
                 rwd = train(env, model)
                 print("[+] Episode", ep, "reward = ", rwd, ".")
                 # 2) Append the total reward of the episode into a list keeping track of all of the rewards.

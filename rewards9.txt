@@ -1,7 +1,8 @@
 Treechop
-Wed Dec 11 18:56:03 EST 2019
+Wed Dec 11 19:12:29 EST 2019
 GPU Available:  True
 env <TimeLimit<MineRLEnv<MineRLTreechop-v0>>>
 env.observation_space Dict(pov:Box(64, 64, 3))
 env.action_space Dict(attack:Discrete(2), back:Discrete(2), camera:Box(2,), forward:Discrete(2), jump:Discrete(2), left:Discrete(2), right:Discrete(2), sneak:Discrete(2), sprint:Discrete(2))
 env.action_space.spaces OrderedDict([('attack', Discrete(2)), ('back', Discrete(2)), ('camera', Box(2,)), ('forward', Discrete(2)), ('jump', Discrete(2)), ('left', Discrete(2)), ('right', Discrete(2)), ('sneak', Discrete(2)), ('sprint', Discrete(2))])
+0 / 650

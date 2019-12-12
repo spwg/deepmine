@@ -37,8 +37,6 @@ class Q_Network(tf.keras.Model):
         self.model.add(Conv2D(filters=8, kernel_size=3, strides=2, padding='same', activation=LeakyReLU()))
         self.model.add(Conv2D(filters=4, kernel_size=3, strides=2, padding='same', activation=LeakyReLU()))
         self.model.add(Reshape((-1, )))
-        self.model.add(GRU(256))
-        self.model.add(Reshape((-1, )))
         self.model.add(Dense(36, dtype=tf.float32))
         self.model.add(Dense(8, dtype=tf.float32))
 
@@ -66,7 +64,7 @@ def main():
         env = gym.make("MineRLTreechop-v0")
         print("Made environment.")
         all_rewards = []
-        with tf.device('/device:GPU:1'):
+        with tf.device('/device:GPU:0'):
             for i in range(epochs):
                 a = datetime.datetime.now()
                 print("Epoch", i, "/", epochs)
