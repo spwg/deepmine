@@ -10,6 +10,16 @@ from reinforce_with_baseline import ReinforceWithBaseline
 from state_space import new_treechop_state
 from action_space import new_action_treechop
 
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+
+gpu_available = tf.test.is_gpu_available()
+print("GPU Available: ", gpu_available)
+
 
 def visualize_data(total_rewards):
     """
@@ -30,7 +40,7 @@ def visualize_data(total_rewards):
 
 def discount(rewards, discount_factor=.99):
     """
-    Takes in a list of rewards for each timestep in an episode, 
+    Takes in a list of rewards for each timestep in an episode,
     and returns a list of the sum of discounted rewards for
     each timestep. Refer to the slides to see how this is done.
 
@@ -71,7 +81,6 @@ def generate_trajectory(env, model):
         # 2) sample from this distribution to pick the next action
         distribution = prbs[0].numpy()
         action = np.random.choice(range(len(distribution)), p=distribution)
-        print("chose", action, "in distribution", distribution)
         actions.append(action)
         action_step = new_action_treechop(env.action_space.noop(), action)
         state, rwd, done, _ = env.step(action_step)
@@ -127,17 +136,21 @@ def main():
 
     # TODO:
     # 1) Train your model for 650 episodes, passing in the environment and the agent.
-    episodes = 650
-    rewards = []
-    for ep in range(episodes):
-        rwd = train(env, model)
-        print("[+] Episode", ep, "reward = ", rwd, ".")
-        # 2) Append the total reward of the episode into a list keeping track of all of the rewards.
-        rewards.append(rwd)
-    # 3) After training, print the average of the last 50 rewards you've collected.
-    print("[+] Avg of last 50 rewards = ", np.mean(rewards[len(rewards)-50:]), ".")
-    # TODO: Visualize your rewards.
-    visualize_data(rewards)
+    try:
+        with tf.device('/device:GPU:1'):
+            episodes = 650
+            rewards = []
+            for ep in range(episodes):
+                rwd = train(env, model)
+                print("[+] Episode", ep, "reward = ", rwd, ".")
+                # 2) Append the total reward of the episode into a list keeping track of all of the rewards.
+                rewards.append(rwd)
+            # 3) After training, print the average of the last 50 rewards you've collected.
+            print("[+] Avg of last 50 rewards = ", np.mean(rewards[len(rewards)-50:]), ".")
+            # TODO: Visualize your rewards.
+            visualize_data(rewards)
+    except RuntimeError as e:
+        print(e)
 
 
 if __name__ == "__main__":
