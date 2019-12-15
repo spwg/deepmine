@@ -6,9 +6,6 @@ import tensorflow as tf
 # Killing optional CPU driver warnings
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-# DO NOT ALTER MODEL CLASS OUTSIDE OF TODOs. OTHERWISE, YOU RISK INCOMPATIBILITY
-# WITH THE AUTOGRADER AND RECEIVING A LOWER GRADE.
-
 
 class ReinforceWithBaseline(tf.keras.Model):
     def __init__(self, state_size, num_actions):
@@ -26,7 +23,6 @@ class ReinforceWithBaseline(tf.keras.Model):
         super(ReinforceWithBaseline, self).__init__()
         self.num_actions = num_actions
 
-        # TODO: Define actor network parameters, critic network parameters, and optimizer
         self.state_size = 512
         self.hidden_size = 512
         self.dense1 = tf.keras.layers.Dense(
@@ -53,7 +49,6 @@ class ReinforceWithBaseline(tf.keras.Model):
         :return: A [episode_length,num_actions] matrix representing the probability distribution over actions
         of each state in the episode
         """
-        # TODO: implement this!
         x = self.dense1(states)
         policy = self.dense2(x)
         return policy
@@ -67,7 +62,6 @@ class ReinforceWithBaseline(tf.keras.Model):
         of an episode
         :return: A [episode_length] matrix representing the value of each state
         """
-        # TODO: implement this :D
         x = self.critic_dense1(states)
         vals = self.critic_dense2(x)
         return vals
@@ -89,8 +83,6 @@ class ReinforceWithBaseline(tf.keras.Model):
         :param discounted_rewards: Discounted rewards throughout a complete episode (represented as an [episode_length] array)
         :return: loss, a TensorFlow scalar
         """
-        # TODO: implement this :)
-        # Hint: use tf.gather_nd (https://www.tensorflow.org/api_docs/python/tf/gather_nd) to get the probabilities of the actions taken by the model
         prbs = self(states)
         prb_actions = [prbs[i][actions[i]] for i in range(len(actions))]
         negative_log_prbs = tf.math.negative(tf.math.log(prb_actions))

@@ -20,7 +20,6 @@ class Reinforce(tf.keras.Model):
         super(Reinforce, self).__init__()
         self.num_actions = num_actions
 
-        # TODO: Define network parameters and optimizer
         self.state_size = state_size
         self.hidden_size = 512
         self.dense1 = tf.keras.layers.Dense(
@@ -42,7 +41,6 @@ class Reinforce(tf.keras.Model):
         :return: A [episode_length,num_actions] matrix representing the probability distribution over actions
         of each state in the episode
         """
-        # TODO: implement this ~
         x = self.dense1(states)
         x = self.dense2(x)
         return x
@@ -56,8 +54,6 @@ class Reinforce(tf.keras.Model):
         :param discounted_rewards: Discounted rewards throughout a complete episode (represented as an [episode_length] array)
         :return: loss, a TensorFlow scalar
         """
-        # TODO: implement this uWu
-        # Hint: Use gather_nd to get the probability of each action that was actually taken in the episode.
         prbs = self(states)
         # prbs 1st d is the step of the ep, 2nd d is in that step, for each action, the probability of it
         prb_actions = [prbs[i][actions[i]] for i in range(len(actions))]

@@ -49,7 +49,6 @@ def discount(rewards, discount_factor=.99):
     :return: discounted_rewards: list containing the sum of discounted rewards for each timestep in the original
     rewards list
     """
-    # TODO: Compute discounted rewards
     discounted_rewards = [0.] * len(rewards)
     discounted_rewards[-1] = rewards[-1]
     for i in reversed(range(len(rewards) - 1)):
@@ -72,13 +71,10 @@ def generate_trajectory(env, model):
     state = env.reset()
     done = False
     while not done:
-        # TODO:
-        # 1) use model to generate probability distribution over next actions
         state = new_treechop_state(state)
         states.append(state)
         model_input = np.array([state])
         prbs = model(model_input)
-        # 2) sample from this distribution to pick the next action
         distribution = prbs[0].numpy()
         action = np.random.choice(range(len(distribution)), p=distribution)
         actions.append(action)
@@ -99,15 +95,10 @@ def train(env, model):
     :param model: The model
     :return: The total reward for the episode
     """
-
-    # TODO:
     with tf.GradientTape() as tape:
-        # 1) Use generate trajectory to run an episode and get states, actions, and rewards.
         states, actions, rewards = generate_trajectory(env, model)
         states = np.array(states)
-        # 2) Compute discounted rewards.
         discounted_rewards = discount(rewards)
-        # 3) Compute the loss from the model and run backpropagation on the model.
         loss = model.loss(states, actions, discounted_rewards)
     gradients = tape.gradient(loss, model.trainable_variables)
     model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -134,8 +125,6 @@ def main():
     elif sys.argv[1] == "REINFORCE_BASELINE":
         model = ReinforceWithBaseline(state_size=None, num_actions=num_actions)
 
-    # TODO:
-    # 1) Train your model for 650 episodes, passing in the environment and the agent.
     try:
         with tf.device('/device:GPU:1'):
             episodes = 650
@@ -144,11 +133,8 @@ def main():
                 print(ep, "/", episodes)
                 rwd = train(env, model)
                 print("[+] Episode", ep, "reward = ", rwd, ".")
-                # 2) Append the total reward of the episode into a list keeping track of all of the rewards.
                 rewards.append(rwd)
-            # 3) After training, print the average of the last 50 rewards you've collected.
             print("[+] Avg of last 50 rewards = ", np.mean(rewards[len(rewards)-50:]), ".")
-            # TODO: Visualize your rewards.
             visualize_data(rewards)
     except RuntimeError as e:
         print(e)
